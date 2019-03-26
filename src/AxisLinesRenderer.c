@@ -13,12 +13,13 @@ static GfxResourceID axisLines_vb;
 #define AXISLINES_LENGTH 3.0f
 
 void AxisLinesRenderer_Render(double delta) {
-	const static uint8_t indices[36] = {
+  (void) delta; // unused
+  static const uint8_t indices[36] = {
 		2,2,1, 2,2,3, 4,2,3, 4,2,1, /* X arrow */
 		1,2,2, 1,2,4, 3,2,4, 3,2,2, /* Z arrow */
 		1,2,3, 1,4,3, 3,4,1, 3,2,1, /* Y arrow */
 	};
-	const static PackedCol cols[3] = {
+	static const PackedCol cols[3] = {
 		PACKEDCOL_CONST(255,   0,   0, 255), /* Red   */
 		PACKEDCOL_CONST(  0,   0, 255, 255), /* Blue  */
 		PACKEDCOL_CONST(  0, 255,   0, 255), /* Green */
@@ -38,7 +39,7 @@ void AxisLinesRenderer_Render(double delta) {
 	Gfx_SetTexturing(false);
 	pos   = LocalPlayer_Instance.Base.Position; pos.Y += 0.05f;
 	count = Camera.Active->IsThirdPerson ? 12 : 8;
-	 
+
 	Vector3_Add1(&coords[0], &pos, -AXISLINES_LENGTH);
 	Vector3_Add1(&coords[1], &pos, -AXISLINES_THICKNESS);
 	coords[2] = pos;
@@ -61,6 +62,7 @@ void AxisLinesRenderer_Render(double delta) {
 *-----------------------------------------------AxisLinesRenderer component-----------------------------------------------*
 *#########################################################################################################################*/
 static void AxisLinesRenderer_ContextLost(void* obj) {
+  (void) obj;
 	Gfx_DeleteVb(&axisLines_vb);
 }
 
@@ -73,7 +75,18 @@ static void AxisLinesRenderer_Free(void) {
 	Event_UnregisterVoid(&GfxEvents.ContextLost, NULL, AxisLinesRenderer_ContextLost);
 }
 
+static void AxisLinesRenderer_Reset (void) {
+  AxisLinesRenderer_Free();
+  AxisLinesRenderer_Init();
+}
+static void AxisLinesRenderer_OnNewMap (void) { }
+static void AxisLinesRenderer_OnNewMapLoaded (void) { }
+
 struct IGameComponent AxisLinesRenderer_Component = {
 	AxisLinesRenderer_Init, /* Init */
 	AxisLinesRenderer_Free, /* Free */
+  AxisLinesRenderer_Reset, /* Reset */
+	AxisLinesRenderer_OnNewMap, /* OnNewMap */
+	AxisLinesRenderer_OnNewMapLoaded, /* OnNewMapLoaded */
+	NULL /* Next */
 };

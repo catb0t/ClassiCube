@@ -15,7 +15,7 @@ Thus it is **NOT SAFE** to allocate a string on the stack. */
 /* Converts a character from A-Z to a-z, otherwise is left untouched. */
 #define Char_MakeLower(c) if ((c) >= 'A' && (c) <= 'Z') { (c) += ' '; }
 
-typedef struct String_ {	
+typedef struct String_ {
 	char* buffer;      /* Pointer to characters, NOT NULL TERMINATED */
 	uint16_t length;   /* Number of characters used */
 	uint16_t capacity; /* Max number of characters  */
@@ -25,7 +25,7 @@ typedef struct String_ {
 /* NOTE: Do NOT modify the contents of this string! */
 extern const String String_Empty;
 /* Constructs a string from the given arguments. */
-static CC_INLINE String String_Init(STRING_REF char* buffer, int length, int capacity) {
+static CC_INLINE String String_Init(STRING_REF char* buffer, uint16_t length, uint16_t capacity) {
 	String s; s.buffer = buffer; s.length = length; s.capacity = capacity; return s;
 }
 
@@ -41,7 +41,7 @@ CC_NOINLINE String String_FromReadonly(STRING_REF const char* buffer);
 /* Constructs a string from a compile time array, then sets all characters to '\0'. */
 #define String_ClearedArray(buffer) String_InitAndClear(buffer, sizeof(buffer))
 /* Constructs a string from a compile time string constant */
-#define String_FromConst(text) { text, (sizeof(text) - 1), (sizeof(text) - 1)}
+#define String_FromConst(text) { ((char*) text), (sizeof(text) - 1), (sizeof(text) - 1)}
 /* Constructs a string from a compile time array */
 #define String_FromArray(buffer) { buffer, 0, sizeof(buffer)}
 /* Constructs a string from a compile time array, that may have arbitary actual length of data at runtime */

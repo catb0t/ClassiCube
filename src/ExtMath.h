@@ -1,7 +1,7 @@
 #ifndef CC_MATH_H
 #define CC_MATH_H
 #include "Core.h"
-/* Simple math functions and constants. Also implements a RNG algorithm, based on 
+/* Simple math functions and constants. Also implements a RNG algorithm, based on
       Java's implementation from https://docs.oracle.com/javase/7/docs/api/java/util/Random.html
    Copyright 2017 ClassicalSharp | Licensed under BSD-3
 */
@@ -14,11 +14,12 @@
 
 #define Math_Deg2Packed(x) ((uint8_t)((x) * 256.0f / 360.0f))
 #define Math_Packed2Deg(x) ((x) * 360.0f / 256.0f)
+#define Math_AbsU(x) ((uint32_t)(x))
 
-float Math_AbsF(float x);
-float Math_SqrtF(float x);
-float Math_Mod1(float x);
-int   Math_AbsI(int x);
+float      Math_AbsF(float x);
+float      Math_SqrtF(float x);
+float      Math_Mod1(float x);
+int        Math_AbsI(int x);
 
 CC_API double Math_Sin(double x);
 CC_API double Math_Cos(double x);
@@ -44,6 +45,7 @@ float Math_Lerp(float a, float b, float t);
 float Math_LerpAngle(float leftAngle, float rightAngle, float t);
 
 int Math_NextPowOf2(int value);
+uint32_t Math_NextPowOf2U(uint32_t value);
 bool Math_IsPowOf2(int value);
 #define Math_Clamp(val, min, max) val = val < (min) ? (min) : val;  val = val > (max) ? (max) : val;
 

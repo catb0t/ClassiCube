@@ -2,6 +2,7 @@
 #define CC_VECTORS_H
 #include "Core.h"
 #include "Constants.h"
+#include "FloatCompare.h"
 /* Represents 2 and 3 component vectors, and 4 x 4 matrix.
    Frustum culling sourced from http://www.crownandcutlass.com/features/technicaldetails/frustum.html
    Copyright 2017 ClassicalSharp | Licensed under BSD-3
@@ -97,11 +98,11 @@ Vector3 Vector3_RotateZ(Vector3 v, float angle);
 
 /* Whether all of the components of the two vectors are equal. */
 static CC_INLINE bool Vector3_Equals(const Vector3* a, const Vector3* b) {
-	return a->X == b->X && a->Y == b->Y && a->Z == b->Z;
+	return CMP_EPS(a->X, b->X) && CMP_EPS(a->Y, b->Y) && CMP_EPS(a->Z, b->Z);
 }
 /* Whether any of the components of the two vectors differ. */
 static CC_INLINE bool Vector3_NotEquals(const Vector3*  a, const Vector3* b) {
-	return a->X != b->X || a->Y != b->Y || a->Z != b->Z;
+	return !CMP_EPS(a->X, b->X) || !CMP_EPS(a->Y, b->Y) || !CMP_EPS(a->Z, b->Z);
 }
 /* Whether all of the components of the two vectors are equal. */
 static CC_INLINE bool Vector3I_Equals(const Vector3I* a, const Vector3I* b) {

@@ -22,7 +22,7 @@ typedef union BitmapColUnion_ { BitmapCol C; uint32_t Raw; } BitmapColUnion;
 CC_API BitmapCol BitmapCol_Scale(BitmapCol value, float t);
 
 /* A 2D array of BitmapCol pixels */
-typedef struct Bitmap_ { uint8_t* Scan0; int Width, Height; } Bitmap;
+typedef struct Bitmap_ { uint8_t* Scan0; uint32_t Width, Height; } Bitmap;
 
 #define PNG_MAX_DIMS 0x8000
 #define BITMAPCOL_CONST(r, g, b, a) { b, g, r, a }
@@ -44,17 +44,20 @@ typedef struct Bitmap_ { uint8_t* Scan0; int Width, Height; } Bitmap;
 /* Copies a rectangle of pixels from one bitmap to another. */
 /* NOTE: If src and dst are the same, src and dst rectangles MUST NOT overlap. */
 /* NOTE: Rectangles are NOT checked for whether they lie inside the bitmaps. */
-void Bitmap_CopyBlock(int srcX, int srcY, int dstX, int dstY, Bitmap* src, Bitmap* dst, int size);
+void Bitmap_CopyBlock(uint32_t srcX, uint32_t srcY, uint32_t dstX, uint32_t dstY, Bitmap* src, Bitmap* dst, uint32_t size);
 /* Allocates a new bitmap of the given dimensions. */
 /* NOTE: You are responsible for freeing its memory! */
-void Bitmap_Allocate(Bitmap* bmp, int width, int height);
+void Bitmap_Allocate(Bitmap* bmp, uint32_t width, uint32_t height);
 /* Allocates a power-of-2 sized bitmap equal to or greater than the given size, and clears it to 0. */
 /* NOTE: You are responsible for freeing its memory! */
-void Bitmap_AllocateClearedPow2(Bitmap* bmp, int width, int height);
+void Bitmap_AllocateClearedPow2(Bitmap* bmp, uint32_t width, uint32_t height);
 
 /* Whether data starts with PNG format signature/identifier. */
 bool Png_Detect(const uint8_t* data, uint32_t len);
-typedef int (*Png_RowSelector)(Bitmap* bmp, int row);
+typedef uint32_t (*Png_RowSelector)(Bitmap* bmp, uint32_t row);
+typedef void (*Png_RowExpander)(uint32_t width, BitmapCol* palette, uint8_t* src, BitmapCol* dst);
+
+Png_RowExpander Png_GetExpander(uint8_t col, uint8_t bitsPerSample);
 /*
   Decodes a bitmap in PNG format. Partially based off information from
      https://handmade.network/forums/wip/t/2363-implementing_a_basic_png_reader_the_handmade_way

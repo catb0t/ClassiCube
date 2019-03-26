@@ -66,6 +66,12 @@ int Math_NextPowOf2(int value) {
 	return next;
 }
 
+uint32_t Math_NextPowOf2U(uint32_t value) {
+  uint32_t next = 1;
+  while (value > next) { next <<= 1U; }
+  return next;
+}
+
 bool Math_IsPowOf2(int value) {
 	return value != 0 && (value & (value - 1)) == 0;
 }
